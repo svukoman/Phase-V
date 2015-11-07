@@ -24,7 +24,7 @@ public class RealEstateApplication
                     editHouseInfo();
                     break;
                  case 1: 
-                    viewHouseInfo();
+                    viewHousingInfo();
                     break;
                  case 2:
                     JOptionPane.showMessageDialog(null, "Goodbye");
@@ -149,27 +149,136 @@ public class RealEstateApplication
     */
     public static void editPropertyType()
     {
-        
+       Object[] property = {"Single family home", "Townhouse", "Condo", "Apartment"};
+       int propertyType = JOptionPane.showOptionDialog(null, "Which type of property is this home??", "Property edit", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, property, property[0]);
+       switch (propertyType)
+            {
+                 case 0:
+                    //Pass info for SF home 
+                    break;
+                 case 1: 
+                    //Pass info for Townhouse
+                    break;
+                 case 2:
+                    //Pass info for condo
+                    break;
+                 case 3: 
+                    //Pass info for Apartment
+                    break;
+            }
     }
     /*
         editPrice asks the agent for the property price.
     */
     public static void editPrice()
     {
+        double price = 0;
         
+        do
+        {
+            try
+            {
+                price = Double.parseDouble(JOptionPane.showInputDialog("Please enter the property price"));
+            }catch(NumberFormatException e){}
+            if (price < 0)
+            {
+                JOptionPane.showMessageDialog(null, "ERROR!");
+            }
+            else
+            {
+                //Pass info to DDC
+            }
+                
+
+        }while(price < 0);
     }
     /*
         editAgentName asks the agent for their name
     */
     public static void editAgentName()
     {
-        
+        String name = "";
+        do
+        {
+            name = JOptionPane.showInputDialog(null, "Please enter the agents name");
+            if (name.isEmpty())
+            {
+                JOptionPane.showMessageDialog(null, "ERROR! Field cannot be empty please try again.");
+            }
+            //Add another form of error checking
+        }while(name.isEmpty());
     }
     /*
         editStatus asks the agent for status, either property is sold or for sale.
     */
     public static void editStatus()
     {
-        
+       Object[] status = {"For sale", "Sold"};
+       int propertyStatus = JOptionPane.showOptionDialog(null, "Which type of property is this home??", "Property edit", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, status, status[0]);
+       switch (propertyStatus)
+            {
+                 case 0:
+                    //Pass info for sale 
+                    break;
+                 case 1: 
+                    //Pass info for sold
+                    break;
+            }
+    }
+    /*
+        Begin the view information method and process
+    */
+    public static void viewHousingInfo()
+    {
+        int coordinates = 0; boolean confirmation = false;
+        do
+        {
+            //Get the X coordinates
+            do
+            {
+                //TODO: Add a way to show the coordinates during input
+                try
+                {
+                coordinates = Integer.parseInt(JOptionPane.showInputDialog("Pleas enter coordinates"));
+                }catch(NumberFormatException e){}
+                if (coordinates < 0 || coordinates > 5)
+                {
+                    JOptionPane.showMessageDialog(null, "ERROR!  Please enter an integer between 1 and 5");
+                }
+                else
+                {
+                    //Pass into the DDC
+                }
+            }while (coordinates < 0 || coordinates > 5);
+            //Get the Y coordinates
+            do
+            {
+                //TODO: Add a way to show the coordinates during input
+                try
+                {
+                coordinates = Integer.parseInt(JOptionPane.showInputDialog("Pleas enter coordinates"));
+                }catch(NumberFormatException e){}
+                if (coordinates < 0 || coordinates > 5)
+                {
+                    JOptionPane.showMessageDialog(null, "ERROR!  Please enter an integer between 1 and 5");
+                }
+                else
+                {
+                    //Pass into the DDC
+                }
+            }while (coordinates < 0 || coordinates > 5);
+
+            //TODO: Print the grid with a bracket inbewteen the chosen one.
+            confirmation = JOptionPane.showConfirmDialog(null, "You have chosen coordinates X: " + " & Y: " + "\nIs that correct?") == JOptionPane.YES_OPTION;
+        }while(confirmation == false);
+        printHousingInformation();
+    }
+    public static void printHousingInformation()
+    {
+        String output = "Property at coordinates (" + "" + "," + "" + ") is handeled by agent: " + "" + ".\n" +
+                "Property is worth: $" + "" + "\n" +
+                "Property Type: " + "" + "\n" +
+                "Status of property: " + "";
+        JOptionPane.showMessageDialog(null, output);
     }
 }
