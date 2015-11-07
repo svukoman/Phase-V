@@ -34,7 +34,6 @@ public class RealEstateApplication
     }
     /*
     Method choose file prompts the user to choose a text file to read information from.
-    @param students is the array of objects.
     */
     public static void chooseFile() throws FileNotFoundException, IOException
     {
