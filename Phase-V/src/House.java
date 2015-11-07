@@ -12,17 +12,21 @@ public class House
     */
     public House(int xCoordinate, int yCoordinate,String agentName, double housePrice, int houseStatus, int type)
     {
-        if(xCoordinate > 5 || xCoordinate < 1){
-                        throw new IllegalArgumentException("Cordinate out of range");
+        if(xCoordinate > 5 || xCoordinate < 1)
+        {
+            throw new IllegalArgumentException("Cordinate out of range");
         }
-        else{
-                        this.xCoordinate = xCoordinate;
+        else
+        {
+            this.xCoordinate = xCoordinate;
         }
-        if(yCoordinate > 5 || xCoordinate < 1){
-                        throw new IllegalArgumentException("Cordinate out of range");
+        if(yCoordinate > 5 || xCoordinate < 1)
+        {
+            throw new IllegalArgumentException("Cordinate out of range");
         }
-        else{
-                        this.yCoordinate = yCoordinate;
+        else
+        {
+            this.yCoordinate = yCoordinate;
         }
         this.housePrice = housePrice;
         this.houseStatus = houseStatus;
