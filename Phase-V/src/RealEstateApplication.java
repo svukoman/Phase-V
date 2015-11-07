@@ -18,7 +18,7 @@ public class RealEstateApplication
         do
         {
             option = showMenu();
-            switch (choice)
+            switch (option)
             {
                  case 0:
                     editHouseInfo();
@@ -67,19 +67,109 @@ public class RealEstateApplication
     }
     public static void editHouseInfo()
     {
-        int coordinates = 0;
+        int coordinates = 0; boolean confirmation = false;
         do
         {
-            //TODO: Add a way to show the coordinates during input
-            try
+            //Get the X coordinates
+            do
             {
-            coordinates = Integer.parseInt(JOptionPane.showInputDialog("Pleas enter coordinates"));
-            }catch(NumberFormatException e){}
-            if (coordinates < 0)
+                //TODO: Add a way to show the coordinates during input
+                try
+                {
+                coordinates = Integer.parseInt(JOptionPane.showInputDialog("Pleas enter coordinates"));
+                }catch(NumberFormatException e){}
+                if (coordinates < 0 || coordinates > 5)
+                {
+                    JOptionPane.showMessageDialog(null, "ERROR!  Please enter an integer between 1 and 5");
+                }
+                else
+                {
+                    //Pass into the DDC
+                }
+            }while (coordinates < 0 || coordinates > 5);
+            //Get the Y coordinates
+            do
             {
-                JOptionPane.showMessageDialog(null, "ERROR!");
+                //TODO: Add a way to show the coordinates during input
+                try
+                {
+                coordinates = Integer.parseInt(JOptionPane.showInputDialog("Pleas enter coordinates"));
+                }catch(NumberFormatException e){}
+                if (coordinates < 0 || coordinates > 5)
+                {
+                    JOptionPane.showMessageDialog(null, "ERROR!  Please enter an integer between 1 and 5");
+                }
+                else
+                {
+                    //Pass into the DDC
+                }
+            }while (coordinates < 0 || coordinates > 5);
+
+            //TODO: Print the grid with a bracket inbewteen the chosen one.
+            confirmation = JOptionPane.showConfirmDialog(null, "You have chosen coordinates X: " + " & Y: " + "\nIs that correct?") == JOptionPane.YES_OPTION;
+        }while(confirmation == false);
+        
+        //Start the edit menu process.
+        int option = 0;
+        do
+        {
+            option = editMenu();
+            switch (option)
+            {
+                 case 0:
+                    editPropertyType();
+                    break;
+                 case 1: 
+                    editPrice();
+                    break;
+                 case 2:
+                    editAgentName();
+                    break;
+                 case 3: 
+                    editStatus();
+                    break;
+                 case 4:
+                    JOptionPane.showMessageDialog(null, "Goodbye");
+                    break;
             }
-            
-        }while (coordinates < 0);
+        }while(option != 4);
+    }
+    /*
+        Buton menu for editing housing info
+    */
+    public static int editMenu()
+    {
+        Object[] options = {"Property type", "Price", "Agent name", "For sale/sold", "Done editing"};
+       int choice = JOptionPane.showOptionDialog(null, "What would you like to edit?", "Edit Menu", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+       
+       return choice;
+    }
+    /*
+        editPropertyType changes the property type
+    */
+    public static void editPropertyType()
+    {
+        
+    }
+    /*
+        editPrice asks the agent for the property price.
+    */
+    public static void editPrice()
+    {
+        
+    }
+    /*
+        editAgentName asks the agent for their name
+    */
+    public static void editAgentName()
+    {
+        
+    }
+    /*
+        editStatus asks the agent for status, either property is sold or for sale.
+    */
+    public static void editStatus()
+    {
+        
     }
 }

@@ -1,0 +1,6 @@
+/Phase-V/nbproject/private/
+/Phase-V/build/
+/Phase-V/dist/
+*.xml
+Phase-V/manifest.mf
+*.properties
