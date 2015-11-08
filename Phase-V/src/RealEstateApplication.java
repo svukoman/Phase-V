@@ -62,7 +62,8 @@ public class RealEstateApplication
     }
     public static void editHouseInfo()
     {
-        int coordinates = 0; boolean confirmation = false;
+        int Xcoordinates = 0; boolean confirmation = false;
+        int Ycoordinates = 0;
         do
         {
             //Get the X coordinates
@@ -71,7 +72,7 @@ public class RealEstateApplication
                 //TODO: Add a way to show the coordinates during input
                 try
                 {
-                coordinates = Integer.parseInt(JOptionPane.showInputDialog("Pleas enter coordinates"));
+                Xcoordinates = Integer.parseInt(JOptionPane.showInputDialog("Please enter the X coordinate"));
                 }catch(NumberFormatException e){}
                 if (coordinates < 0 || coordinates > 5)
                 {
@@ -79,7 +80,7 @@ public class RealEstateApplication
                 }
                 else
                 {
-                    //Pass into the DDC
+                    //Pass into the array of house objects
                 }
             }while (coordinates < 0 || coordinates > 5);
             //Get the Y coordinates
@@ -88,7 +89,7 @@ public class RealEstateApplication
                 //TODO: Add a way to show the coordinates during input
                 try
                 {
-                coordinates = Integer.parseInt(JOptionPane.showInputDialog("Pleas enter coordinates"));
+                Ycoordinates = Integer.parseInt(JOptionPane.showInputDialog("Please enter the Y coordinates"));
                 }catch(NumberFormatException e){}
                 if (coordinates < 0 || coordinates > 5)
                 {
@@ -96,12 +97,12 @@ public class RealEstateApplication
                 }
                 else
                 {
-                    //Pass into the DDC
+                    //Pass into the array of house objects
                 }
             }while (coordinates < 0 || coordinates > 5);
 
             //TODO: Print the grid with a bracket inbewteen the chosen one.
-            confirmation = JOptionPane.showConfirmDialog(null, "You have chosen coordinates X: " + " & Y: " + "\nIs that correct?") == JOptionPane.YES_OPTION;
+            confirmation = JOptionPane.showConfirmDialog(null, "You have chosen coordinates X: " + Xcoordinates + " & Y: " + Ycoordinates + "\nIs that correct?") == JOptionPane.YES_OPTION;
         }while(confirmation == false);
         
         //Start the edit menu process.
