@@ -33,7 +33,10 @@ public class RealEstateApplication
     */
     public static void chooseFile() throws FileNotFoundException, IOException
     {
-        int i = 0; String one; String name = ""; double gpa;
+        int i = 0; 
+        String one; 
+        String name = ""; 
+        double gpa;
         Scanner scan = null;
         //JFileChooser opens a dialog box to choose a specefic file regardelss if its in the same location as the .java file.
         JFileChooser aFile = new JFileChooser();
@@ -271,10 +274,7 @@ public class RealEstateApplication
     }
     public static void printHousingInformation()
     {
-        String output = "Property at coordinates (" + "" + "," + "" + ") is handeled by agent: " + "" + ".\n" +
-                "Property is worth: $" + "" + "\n" +
-                "Property Type: " + "" + "\n" +
-                "Status of property: " + "";
+        String output = House.toString();
         JOptionPane.showMessageDialog(null, output);
     }
 }
