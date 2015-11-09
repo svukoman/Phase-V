@@ -1,7 +1,7 @@
 public class Type
 {
     private String type;
-    private final String[] TYPE_LIST = {"Apartment", "Town-House", "Condo", "Mansion"};
+    private final String[] TYPE_LIST = {"Single Family Home", "Town-House", "Condo", "Apartment"};
 
     public Type(){}
     /*Method purpose:
@@ -22,16 +22,15 @@ public class Type
      Method parameters:
      Return:
     */
-    public boolean setType(int type)
+    public void setType(int type)
     {
-       if(type < 0)
+       if(type < 0 || type > 3)
        {
-            throw new IllegalArgumentException("Sorry...");
+            throw new IllegalArgumentException("Type is out of range");
        }
        else 
        {
             this.type = TYPE_LIST[type];
-            return true;
        }
     }
 
