@@ -130,7 +130,7 @@ public class RealEstateApplication
                     editStatus();
                     break;
                  case 4:
-                    JOptionPane.showMessageDialog(null, "Goodbye");
+                    JOptionPane.showMessageDialog(null, "Returning to Main menu");
                     break;
             }
         }while(option != 4);
