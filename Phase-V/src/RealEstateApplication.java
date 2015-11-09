@@ -9,7 +9,8 @@ public class RealEstateApplication
 {
     public static void main(String[] args)
     {
-        //chooseFile();
+        //final String path = "\path\to\file.txt";
+        //chooseFile(path);
         int option = 0;
         do
         {
@@ -31,7 +32,7 @@ public class RealEstateApplication
     /*
     Method choose file prompts the user to choose a text file to read information from.
     */
-    public static void chooseFile() throws FileNotFoundException, IOException
+    public static void chooseFile(String path) throws FileNotFoundException, IOException
     {
         int i = 0; 
         String one; 
@@ -65,8 +66,9 @@ public class RealEstateApplication
     }
     public static void editHouseInfo()
     {
-        int Xcoordinates = 0; boolean confirmation = false;
+        int Xcoordinates = 0;
         int Ycoordinates = 0;
+        boolean confirmation = false;
         do
         {
             //Get the X coordinates
@@ -77,7 +79,7 @@ public class RealEstateApplication
                 {
                 Xcoordinates = Integer.parseInt(JOptionPane.showInputDialog("Please enter the X coordinate"));
                 }catch(NumberFormatException e){}
-                if (coordinates < 0 || coordinates > 5)
+                if (Xcoordinates < 0 || Xcoordinates > 5)
                 {
                     JOptionPane.showMessageDialog(null, "ERROR!  Please enter an integer between 1 and 5");
                 }
@@ -85,7 +87,7 @@ public class RealEstateApplication
                 {
                     //Pass into the array of house objects
                 }
-            }while (coordinates < 0 || coordinates > 5);
+            }while (Xcoordinates < 0 || Xcoordinates > 5);
             //Get the Y coordinates
             do
             {
@@ -94,7 +96,7 @@ public class RealEstateApplication
                 {
                 Ycoordinates = Integer.parseInt(JOptionPane.showInputDialog("Please enter the Y coordinates"));
                 }catch(NumberFormatException e){}
-                if (coordinates < 0 || coordinates > 5)
+                if (Ycoordinates < 0 || Ycoordinates > 5)
                 {
                     JOptionPane.showMessageDialog(null, "ERROR!  Please enter an integer between 1 and 5");
                 }
@@ -102,7 +104,7 @@ public class RealEstateApplication
                 {
                     //Pass into the array of house objects
                 }
-            }while (coordinates < 0 || coordinates > 5);
+            }while (Ycoordinates < 0 || Ycoordinates > 5);
 
             //TODO: Print the grid with a bracket inbewteen the chosen one.
             confirmation = JOptionPane.showConfirmDialog(null, "You have chosen coordinates X: " + Xcoordinates + " & Y: " + Ycoordinates + "\nIs that correct?") == JOptionPane.YES_OPTION;
@@ -172,24 +174,31 @@ public class RealEstateApplication
     public static void editPrice()
     {
         double price = 0;
+        boolean valid = false;
         
         do
         {
             try
             {
                 price = Double.parseDouble(JOptionPane.showInputDialog("Please enter the property price"));
-            }catch(NumberFormatException e){}
-            if (price < 0)
+                valid = true;
+            }catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(null, "Price must be entered in a numaric format");
+            }catch(IllegalArgumentException f){
+                JOptionPane.showMessageDialog(null, f.getMessage());   
+            }
+            }
+           /* if (price < 0)
             {
                 JOptionPane.showMessageDialog(null, "ERROR!");
             }
             else
             {
                 //Pass info to DDC
-            }
+            }*/
                 
 
-        }while(price < 0);
+        }while(!valid);
     }
     /*
         editAgentName asks the agent for their name
@@ -197,22 +206,22 @@ public class RealEstateApplication
     public static void editAgentName()
     {
         String name = "";
+        Boolean valid = false;
         do
         {
+            try{
             name = JOptionPane.showInputDialog(null, "Please enter the agents name");
-            if (name.isEmpty())
-            {
-                JOptionPane.showMessageDialog(null, "ERROR! Field cannot be empty please try again.");
+            }catch(IllegalArgumentException e){
+                JOptionPane.showMessageDialog(null, e.getMessage());
             }
-            //Add another form of error checking
-        }while(name.isEmpty());
+        }while(!valid);
     }
     /*
-        editStatus asks the agent for status, either property is sold or for sale.
+        editStatus asks the agent for status, either property is sold or for sale or NA.
     */
     public static void editStatus()
     {
-       Object[] status = {"For sale", "Sold"};
+       Object[] status = {"For sale", "Sold", "N/A"};
        int propertyStatus = JOptionPane.showOptionDialog(null, "Which type of property is this home??", "Property edit", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, status, status[0]);
        switch (propertyStatus)
             {
@@ -222,6 +231,10 @@ public class RealEstateApplication
                  case 1: 
                     //Pass info for sold
                     break;
+                case 2:
+                    //pass info for N/A
+                default:
+                    JOptionPane.showMessageDialog(null, "Status was not updated");
             }
     }
     /*
@@ -229,7 +242,9 @@ public class RealEstateApplication
     */
     public static void viewHousingInfo()
     {
-        int coordinates = 0; boolean confirmation = false;
+        int Xcoordinates = 0;
+        int Ycoordinates = 0;
+        boolean confirmation = false;
         do
         {
             //Get the X coordinates
@@ -238,9 +253,9 @@ public class RealEstateApplication
                 //TODO: Add a way to show the coordinates during input
                 try
                 {
-                coordinates = Integer.parseInt(JOptionPane.showInputDialog("Pleas enter coordinates"));
+                Xcoordinates = Integer.parseInt(JOptionPane.showInputDialog("Pleas enter the X coordinate"));
                 }catch(NumberFormatException e){}
-                if (coordinates < 0 || coordinates > 5)
+                if (Xcoordinates < 0 || Xcoordinates > 5)
                 {
                     JOptionPane.showMessageDialog(null, "ERROR!  Please enter an integer between 1 and 5");
                 }
@@ -248,24 +263,26 @@ public class RealEstateApplication
                 {
                     //Pass into the DDC
                 }
-            }while (coordinates < 0 || coordinates > 5);
+            }while (Xcoordinates < 0 || Xcoordinates > 5);
             //Get the Y coordinates
             do
             {
                 //TODO: Add a way to show the coordinates during input
                 try
                 {
-                coordinates = Integer.parseInt(JOptionPane.showInputDialog("Pleas enter coordinates"));
-                }catch(NumberFormatException e){}
-                if (coordinates < 0 || coordinates > 5)
+                Ycoordinates = Integer.parseInt(JOptionPane.showInputDialog("Pleas enter the Y coordinate"));
+                }catch(NumberFormatException e){
+                    JOptionPane.showMessageDialog(null, "You must enter coordinates in numaric format");
+                }
+                if (Ycoordinates < 0 || Ycoordinates > 5)
                 {
                     JOptionPane.showMessageDialog(null, "ERROR!  Please enter an integer between 1 and 5");
                 }
                 else
                 {
-                    //Pass into the DDC
+                    //Pass into the array of House objects
                 }
-            }while (coordinates < 0 || coordinates > 5);
+            }while (Ycoordinates < 0 || Ycoordinates > 5);
 
             //TODO: Print the grid with a bracket inbewteen the chosen one.
             confirmation = JOptionPane.showConfirmDialog(null, "You have chosen coordinates X: " + " & Y: " + "\nIs that correct?") == JOptionPane.YES_OPTION;
@@ -274,7 +291,8 @@ public class RealEstateApplication
     }
     public static void printHousingInformation()
     {
-        String output = House.toString();
+        //where home is equal to the object refrence we are trying to print.
+        String output = home.toString();
         JOptionPane.showMessageDialog(null, output);
     }
 }
