@@ -39,16 +39,15 @@ public class House
       Return:
     */
 
-    public boolean setHousePrice(double housePrice)
+    public void setHousePrice(double housePrice)
     {
-        if (housePrice < 0)
+        if (housePrice <= 0)
         {
          throw new IllegalArgumentException("The value for the house entered cannot be less than 0");
         }
         else 
         {
             this.housePrice = housePrice;
-            return true;
         }
     }
 
@@ -57,7 +56,7 @@ public class House
       Return:
     */
 
-    public boolean setAgentName(String agentName)
+    public void setAgentName(String agentName)
     {
         if(agentName.equals(""))
         {
@@ -66,7 +65,7 @@ public class House
         else 
         {
             this.agentName = agentName;
-            return true;
+            
         }
     }
 
