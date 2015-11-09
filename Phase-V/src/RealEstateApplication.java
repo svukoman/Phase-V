@@ -187,7 +187,7 @@ public class RealEstateApplication
             }catch(IllegalArgumentException f){
                 JOptionPane.showMessageDialog(null, f.getMessage());   
             }
-            }
+            
            /* if (price < 0)
             {
                 JOptionPane.showMessageDialog(null, "ERROR!");
@@ -292,7 +292,7 @@ public class RealEstateApplication
     public static void printHousingInformation()
     {
         //where home is equal to the object refrence we are trying to print.
-        String output = home.toString();
-        JOptionPane.showMessageDialog(null, output);
+        //String output = home.toString();
+        //JOptionPane.showMessageDialog(null, output);
     }
 }
