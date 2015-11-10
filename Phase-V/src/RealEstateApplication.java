@@ -13,32 +13,41 @@ public class RealEstateApplication
         int MAX_HOUSES = 25;
         House[] data = new House[MAX_HOUSES];
 
-        chooseFile(data);
-
-        //chooseFile(data, path);
-
-        int option = 0;
-        do
+        int valid = 1;
+        //valid = chooseFile(data);
+        while(valid == 1)
         {
-            option = showMenu();
-            switch (option)
+            valid = chooseFile(data);
+            if (valid == 0)
             {
-                 case 0:
-                    editHouseInfo(data);
-                    break;
-                 case 1: 
-                    viewHousingInfo(data);
-                    break;
-                 case 2:
-                    JOptionPane.showMessageDialog(null, "Goodbye");
-                    break;
+                int option = 0;
+                do
+                {
+                    option = showMenu();
+                    switch (option)
+                    {
+                         case 0:
+                            editHouseInfo(data);
+                            break;
+                         case 1: 
+                            viewHousingInfo(data);
+                            break;
+                         case 2:
+                            JOptionPane.showMessageDialog(null, "Goodbye");
+                            break;
+                    }
+                }while(option != 2);
             }
-        }while(option != 2);
+            else
+            {
+                JOptionPane.showMessageDialog(null, "Sorry, you have not chosen a file. Please run the program again");
+            }
+        }
     }
     /*
     Method choose file prompts the user to choose a text file to read information from.
     */
-    public static void chooseFile(House[] data) throws FileNotFoundException
+    public static int chooseFile(House[] data) throws FileNotFoundException
     {
         int xCord = -1;
         int yCord = -1;
@@ -55,33 +64,35 @@ public class RealEstateApplication
         if (result == JFileChooser.APPROVE_OPTION)
         {
             try{
-             in = new Scanner(new FileInputStream(new File(aFile.getSelectedFile().getPath())));
-             while(in.hasNextLine()){
-                xCord = Integer.parseInt(in.next());
-                comma = in.next();
+                in = new Scanner(new FileInputStream(new File(aFile.getSelectedFile().getPath())));
+                while(in.hasNextLine()){
+                   xCord = Integer.parseInt(in.next());
+                   comma = in.next();
 
-                yCord = Integer.parseInt(in.next());
-                comma = in.next();
+                   yCord = Integer.parseInt(in.next());
+                   comma = in.next();
 
-                name = in.next();
-                comma = in.next();
+                   name = in.next();
+                   comma = in.next();
 
-                money = Double.parseDouble(in.next());
-                comma = in.next();
+                   money = Double.parseDouble(in.next());
+                   comma = in.next();
 
-                status = Integer.parseInt(in.next());
-                comma = in.next();
+                   status = Integer.parseInt(in.next());
+                   comma = in.next();
 
-                type = Integer.parseInt(in.next());            
+                   type = Integer.parseInt(in.next());            
 
-                data[i] = new House(xCord, yCord, name, money, status, type);
-                i++;  
-             }
-             in.close();         
+                   data[i] = new House(xCord, yCord, name, money, status, type);
+                   i++;  
+                }
+                in.close();         
             }catch(IllegalArgumentException f){
              JOptionPane.showMessageDialog(null, f.getMessage());
             }   
+            return 0;
         }
+        else return 1;
     }
     public static int showMenu ()
     {

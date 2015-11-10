@@ -167,9 +167,9 @@ public class House
     {
         String msg = "";
         switch(this.houseStatus){
-                case(1): msg = "O|"; break;
-                case(2): msg = "X|"; break;
-                case(3): msg = "*|"; break;
+                case(1): msg = " O   |  "; break;
+                case(2): msg = " X   |  "; break;
+                case(3): msg = " *   |  "; break;
         default: throw new IllegalArgumentException("There was an error retreaving the status of this house");
         }
         return msg;	
