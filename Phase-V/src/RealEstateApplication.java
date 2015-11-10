@@ -1,4 +1,3 @@
-
 import java.io.*;
 import java.util.Scanner;
 import javax.swing.JFileChooser;
@@ -13,13 +12,7 @@ public class RealEstateApplication
         final String path = "Sample_Data.txt";
         int MAX_HOUSES = 25;
         House[] data = new House[MAX_HOUSES];
-        try{
         chooseFile(data, path);
-        }catch(FileNotFoundExceptio e){
-            JOptionPane.showMessageDialog(null, "Sorry, the file at " + path + " was not found");
-        }catch(IOException){
-            JOptionPane.showMessageDialog(null, "Sorry, there was a problem reading the file at: " + path);
-        }
         int option = 0;
         do
         {
@@ -27,7 +20,7 @@ public class RealEstateApplication
             switch (option)
             {
                  case 0:
-                    editHouseInfo(data);
+                    editHouseInfo(data, path);
                     break;
                  case 1: 
                     viewHousingInfo(data);
@@ -80,8 +73,7 @@ public class RealEstateApplication
          JOptionPane.showMessageDialog(null, f.getMessage());
         }catch(FileNotFoundException g){
          JOptionPane.showMessageDialog(null, "Sorry, the file was not found");
-        }
-        
+        }        
     }
     public static int showMenu ()
     {
@@ -90,7 +82,7 @@ public class RealEstateApplication
        
        return choice;
     }
-    public static void editHouseInfo(House[] data)
+    public static void editHouseInfo(House[] data, String path)
     {
         int Xcoordinates = 0;
         int Ycoordinates = 0;
@@ -152,18 +144,23 @@ public class RealEstateApplication
             {
                  case 0:
                     editPropertyType(data, x);
+                    saveToFile(data, path);
                     break;
                  case 1: 
                     editPrice(data, x);
+                    saveToFile(data, path);
                     break;
                  case 2:
                     editAgentName(data, x);
+                    saveToFile(data, path);
                     break;
                  case 3: 
                     editStatus(data, x);
+                    saveToFile(data, path);
                     break;
                  case 4:
                     JOptionPane.showMessageDialog(null, "Returning to Main menu");
+                    saveToFile(data, path);
                     break;
             }
         }while(option != 4);
@@ -185,21 +182,15 @@ public class RealEstateApplication
     {
        Object[] property = {"Single family home", "Townhouse", "Condo", "Apartment"};
        int propertyType = JOptionPane.showOptionDialog(null, "Which type of property is this home??", "Property edit", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, property, property[0]);
-       switch (propertyType)
-            {
-                 case 0:
-                    //Pass info for SF home 
-                    break;
-                 case 1: 
-                    //Pass info for Townhouse
-                    break;
-                 case 2:
-                    //Pass info for condo
-                    break;
-                 case 3: 
-                    //Pass info for Apartment
-                    break;
-            }
+       boolean valid = false;
+       do{
+       try{
+         data[x].setType(propertyType);
+         valid = true;
+       }catch(IllegalArgumentException e){
+         JOptionPane.showMessageDialog(null, e.getMessage());
+       }
+       }while(!valid);
     }
     /*
         editPrice asks the agent for the property price.
@@ -214,6 +205,7 @@ public class RealEstateApplication
             try
             {
                 price = Double.parseDouble(JOptionPane.showInputDialog("Please enter the property price"));
+                data[x].setHousePrice(price);
                 valid = true;
             }catch(NumberFormatException e){
                 JOptionPane.showMessageDialog(null, "Price must be entered in a numaric format");
@@ -223,8 +215,7 @@ public class RealEstateApplication
                 valid = false;
             }
 
-        }while(!valid);
-        data[x].setHousePrice(price);
+        }while(!valid);       
     }
     /*
         editAgentName asks the agent for their name
@@ -232,11 +223,12 @@ public class RealEstateApplication
     public static void editAgentName(House[] data, int x)
     {
         String name = "";
-        Boolean valid = false;
+        boolean valid = false;
         do
         {
             try{
             name = JOptionPane.showInputDialog(null, "Please enter the agents name");
+            valid = true;
             }catch(IllegalArgumentException e){
                 JOptionPane.showMessageDialog(null, e.getMessage());
             }
@@ -272,7 +264,7 @@ public class RealEstateApplication
         int Xcoordinates = 0;
         int Ycoordinates = 0;
         boolean confirmation = false;
-        String grid = "";
+        String grid = printGrid(data);
         do
         {
             //Get the X coordinates
@@ -320,7 +312,7 @@ public class RealEstateApplication
     /*
     
     */
-     public static String printGrid(House[] data)
+    public static String printGrid(House[] data)
     {
         String grid = "";
         for (int j = 0; j < data.length; j++)
@@ -341,5 +333,18 @@ public class RealEstateApplication
     public static void printHousingInformation(House home)
     {
       JOptionPane.showMessageDialog(null, home.toString());    
+    }
+    public static void saveToFile(House[] data, String path){
+    //instantiates a new object of the PrintWriter class
+      PrintWriter op = null;
+      try{
+         op = new PrintWriter(new FileOutputStream(path));
+      }catch(FileNotFoundException e){
+         JOptionPane.showMessageDialog(null, "The file was unable to be created/updated, please check the permissions on the current directory and try again","Real Estate Application", JOptionPane.ERROR_MESSAGE);
+      }
+      for(int i=0; i<data.length; i++){
+         op.println(data[i].getXCoordinate() + " , " + data[i].getYCoordinate() + " , " + data[i].getAgentName() + " , " + data[i].getPrice() + " , " + data[i].getStatus() + " , " + data[i].getType());
+      }
+      op.close();
     }
 }
