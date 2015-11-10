@@ -309,64 +309,37 @@ public class RealEstateApplication
             //TODO: Print the grid with a bracket inbewteen the chosen one.
             confirmation = JOptionPane.showConfirmDialog(null, "You have chosen coordinates X: " + Xcoordinates + " & Y: " + Ycoordinates + "\nIs that correct?") == JOptionPane.YES_OPTION;
         }while(confirmation == false);
-        printHousingInformation(data);
+        House home = null;
+        for(int i=0; i<data.length; i++){
+         if(data[i].getXCoordinate() == Xcoordinates && data[i].getYCoordinate() == Ycoordinates){
+            home = data[i];
+         }
+        }
+        printHousingInformation(home);
     }
     /*
     
     */
-    public static String printGrid(House[] data)
+     public static String printGrid(House[] data)
     {
         String grid = "";
-        for (int j = 1; j < 6; j++)
-        {
-            for (int k = 1; k < 6; k++)
-            {
-                if (data[k].getYCoordinate() == j && data[k].getXCoordinate() == k)
-                {
-                    if (data[k].getStatus() == 0)
-                    {
-                        grid += "X|     ";
-                    }
-                    else if (data[k].getStatus() == 1)
-                    {
-                        grid += "O|     ";
-                    }
-                    else
-                    {
-                        grid += "*|     ";
-                    }
-                    
-                }
-            }
-            grid += "\n";
-
+        for (int j = 0; j < data.length; j++)
+        {            
+         switch(j){
+            case(5):
+            case(10):
+            case(15):
+            case(20): grid+= "\n";            
+         }
+         grid+=data[j].ToSymbol();        
         }
         return grid;
     }
     /*
     
     */
-    public static void printHousingInformation(House[] data)
+    public static void printHousingInformation(House home)
     {
-        //where home is equal to the object refrence we are trying to print.
-        //String output = home.toString();
-        //JOptionPane.showMessageDialog(null, output);
-        try
-        {
-            //This prompts the user to enter a txt file name of the users choosing. The txt file will be placed in the .java file's directory
-            PrintWriter out = new PrintWriter(new FileOutputStream(new File(JOptionPane.showInputDialog("Please enter file name."))));
-            Type[] type = new Type[25];
-            for (int i = 0; i < data.length;i++)
-            {
-                type[i] = new Type();
-                
-                out.println(data[i].getXCoordinate() + ", " + data[i].getYCoordinate() + ", " + data[i].getAgentName() + ", " + data[i].getPrice() + ", " + data[i].getStatus() + ", " +  type[i].getTypeNo());
-            }
-            out.close();
-        }catch(FileNotFoundException e)
-        {
-            JOptionPane.showMessageDialog(null, "could not find file","Phase V", JOptionPane.ERROR_MESSAGE);
-        }
-    
+      JOptionPane.showMessageDialog(null, home.toString());    
     }
 }
