@@ -13,7 +13,13 @@ public class RealEstateApplication
         //final String path = "\path\to\file.txt";
         int MAX_HOUSES = 25;
         House[] data = new House[MAX_HOUSES];
+        try{
         chooseFile(data);
+        }catch(FileNotFoundExceptio e){
+            JOptionPane.showMessageDialog(null, "Sorry, the file at " + path + " was not found");
+        }catch(IOException){
+            JOptionPane.showMessageDialog(null, "Sorry, there was a problem reading the file at: " + path);
+        }
         int option = 0;
         do
         {
@@ -63,7 +69,9 @@ public class RealEstateApplication
                     data[i] = new House(xCoordinates, yCoordinates, name, price, status, type);
                     //not sure what the next 2 items are in the list
                     
-                }catch(IllegalArgumentException e){}
+                }catch(IllegalArgumentException e){
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                }
                 //TODO: add catch method for unsupported file format or something
                 i++;
             }
