@@ -10,11 +10,11 @@ public class RealEstateApplication
     //Remember to remove IOException from main
     public static void main(String[] args) throws IOException
     {
-        //final String path = "\path\to\file.txt";
+        final String path = "Sample_Data.txt";
         int MAX_HOUSES = 25;
         House[] data = new House[MAX_HOUSES];
         try{
-        chooseFile(data);
+        chooseFile(data, path);
         }catch(FileNotFoundExceptio e){
             JOptionPane.showMessageDialog(null, "Sorry, the file at " + path + " was not found");
         }catch(IOException){
@@ -41,41 +41,47 @@ public class RealEstateApplication
     /*
     Method choose file prompts the user to choose a text file to read information from.
     */
-    public static void chooseFile(House[] data) throws FileNotFoundException, IOException
+    public static void chooseFile(House[] data, String path)
     {
+        int xCord = -1;
+        int yCord = -1;
+        String name = " ";
+        double money = 0.0;
+        int status = -1;
+        int type = -1;
+        Scanner in = null;
         int i = 0;
-        String one; 
-        double gpa;
-        Scanner scan = null;
-        //JFileChooser opens a dialog box to choose a specefic file regardelss if its in the same location as the .java file.
-        JFileChooser aFile = new JFileChooser();
-        int result = aFile.showOpenDialog(null);
-        if (result == JFileChooser.APPROVE_OPTION)
-        {
-            //Reads the entire file and goes through the lines one by one. Seperates the name and the gpa from one another and send it to the Student class
-            scan = new Scanner(new FileReader(new File(aFile.getSelectedFile().getPath())));
+        String comma;
+        try{
+         in = new Scanner(new FileInputStream(path));
+         while(in.hasNextLine()){
+            xCord = Integer.parseInt(in.next());
+            comma = in.next();
             
-            scan.useDelimiter(",");
-            while(scan.hasNext())
-            {
-                try
-                {
-                    int  xCoordinates = scan.nextInt();
-                    int  yCoordinates = scan.nextInt();
-                    String name = scan.next();
-                    double price = scan.nextDouble();
-                    int status = scan.nextInt();
-                    int type = scan.nextInt();
-                    data[i] = new House(xCoordinates, yCoordinates, name, price, status, type);
-                    //not sure what the next 2 items are in the list
-                    
-                }catch(IllegalArgumentException e){
-                    JOptionPane.showMessageDialog(null, e.getMessage());
-                }
-                //TODO: add catch method for unsupported file format or something
-                i++;
-            }
+            yCord = Integer.parseInt(in.next());
+            comma = in.next();
+            
+            name = in.next();
+            comma = in.next();
+            
+            money = Double.parseDouble(in.next());
+            comma = in.next();
+            
+            status = Integer.parseInt(in.next());
+            comma = in.next();
+            
+            type = Integer.parseInt(in.next());            
+            
+            data[i] = new House(xCord, yCord, name, money, status, type);
+            i++;  
+         }
+         in.close();         
+        }catch(IllegalArgumentException f){
+         JOptionPane.showMessageDialog(null, f.getMessage());
+        }catch(FileNotFoundException g){
+         JOptionPane.showMessageDialog(null, "Sorry, the file was not found");
         }
+        
     }
     public static int showMenu ()
     {
