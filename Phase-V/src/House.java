@@ -123,6 +123,9 @@ public class House
             this.yCoordinate = y;
         }	
     }
+    public void setType(int atype) throws IllegalArgumentException{
+      type.setType(atype);  
+    }
     /*Method purpose:
       Method parameters:
       Return:
@@ -157,13 +160,16 @@ public class House
       Method parameters:
       Return:
     */
+    public int getType(){
+      return this.type.getTypeNo();
+    }
     public String ToSymbol()
     {
         String msg = "";
         switch(this.houseStatus){
-                case(1): msg = "O"; break;
-                case(2): msg = "X"; break;
-                case(3): msg = "*"; break;
+                case(1): msg = "O|"; break;
+                case(2): msg = "X|"; break;
+                case(3): msg = "*|"; break;
         default: throw new IllegalArgumentException("There was an error retreaving the status of this house");
         }
         return msg;	
@@ -183,4 +189,3 @@ public class House
         return msg;
     }
 }
-

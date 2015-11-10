@@ -1,4 +1,3 @@
-
 import java.io.*;
 import java.util.Scanner;
 import javax.swing.JFileChooser;
@@ -10,16 +9,14 @@ public class RealEstateApplication
     //Remember to remove IOException from main
     public static void main(String[] args) throws IOException
     {
-        //final String path = "\path\to\file.txt";
+        
         int MAX_HOUSES = 25;
         House[] data = new House[MAX_HOUSES];
-        try{
+
         chooseFile(data);
-        }catch(FileNotFoundException e){
-            JOptionPane.showMessageDialog(null, "Sorry, the file was not found");
-        }catch(IOException e){
-            JOptionPane.showMessageDialog(null, "Sorry, there was a problem reading the file");
-        }
+
+        //chooseFile(data, path);
+
         int option = 0;
         do
         {
@@ -41,40 +38,49 @@ public class RealEstateApplication
     /*
     Method choose file prompts the user to choose a text file to read information from.
     */
-    public static void chooseFile(House[] data) throws FileNotFoundException, IOException
+    public static void chooseFile(House[] data) throws FileNotFoundException
     {
+        int xCord = -1;
+        int yCord = -1;
+        String name = " ";
+        double money = 0.0;
+        int status = -1;
+        int type = -1;
+        Scanner in = null;
         int i = 0;
-        String one; 
-        double gpa;
-        Scanner scan = null;
+        String comma;
         //JFileChooser opens a dialog box to choose a specefic file regardelss if its in the same location as the .java file.
         JFileChooser aFile = new JFileChooser();
         int result = aFile.showOpenDialog(null);
         if (result == JFileChooser.APPROVE_OPTION)
         {
-            //Reads the entire file and goes through the lines one by one. Seperates the name and the gpa from one another and send it to the Student class
-            scan = new Scanner(new FileReader(new File(aFile.getSelectedFile().getPath())));
-            
-            scan.useDelimiter(",");
-            while(scan.hasNext())
-            {
-                try
-                {
-                    int  xCoordinates = scan.nextInt();
-                    int  yCoordinates = scan.nextInt();
-                    String name = scan.next();
-                    double price = scan.nextDouble();
-                    int status = scan.nextInt();
-                    int type = scan.nextInt();
-                    data[i] = new House(xCoordinates, yCoordinates, name, price, status, type);
-                    //not sure what the next 2 items are in the list
-                    
-                }catch(IllegalArgumentException e){
-                    JOptionPane.showMessageDialog(null, e.getMessage());
-                }
-                //TODO: add catch method for unsupported file format or something
-                i++;
-            }
+            try{
+             in = new Scanner(new FileInputStream(new File(aFile.getSelectedFile().getPath())));
+             while(in.hasNextLine()){
+                xCord = Integer.parseInt(in.next());
+                comma = in.next();
+
+                yCord = Integer.parseInt(in.next());
+                comma = in.next();
+
+                name = in.next();
+                comma = in.next();
+
+                money = Double.parseDouble(in.next());
+                comma = in.next();
+
+                status = Integer.parseInt(in.next());
+                comma = in.next();
+
+                type = Integer.parseInt(in.next());            
+
+                data[i] = new House(xCord, yCord, name, money, status, type);
+                i++;  
+             }
+             in.close();         
+            }catch(IllegalArgumentException f){
+             JOptionPane.showMessageDialog(null, f.getMessage());
+            }   
         }
     }
     public static int showMenu ()
@@ -146,18 +152,23 @@ public class RealEstateApplication
             {
                  case 0:
                     editPropertyType(data, x);
+                    saveToFile(data);
                     break;
                  case 1: 
                     editPrice(data, x);
+                    saveToFile(data);
                     break;
                  case 2:
                     editAgentName(data, x);
+                    saveToFile(data);
                     break;
                  case 3: 
                     editStatus(data, x);
+                    saveToFile(data);
                     break;
                  case 4:
                     JOptionPane.showMessageDialog(null, "Returning to Main menu");
+                    saveToFile(data);
                     break;
             }
         }while(option != 4);
@@ -179,21 +190,15 @@ public class RealEstateApplication
     {
        Object[] property = {"Single family home", "Townhouse", "Condo", "Apartment"};
        int propertyType = JOptionPane.showOptionDialog(null, "Which type of property is this home??", "Property edit", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, property, property[0]);
-       switch (propertyType)
-            {
-                 case 0:
-                    //Pass info for SF home 
-                    break;
-                 case 1: 
-                    //Pass info for Townhouse
-                    break;
-                 case 2:
-                    //Pass info for condo
-                    break;
-                 case 3: 
-                    //Pass info for Apartment
-                    break;
-            }
+       boolean valid = false;
+       do{
+       try{
+         data[x].setType(propertyType);
+         valid = true;
+       }catch(IllegalArgumentException e){
+         JOptionPane.showMessageDialog(null, e.getMessage());
+       }
+       }while(!valid);
     }
     /*
         editPrice asks the agent for the property price.
@@ -208,6 +213,7 @@ public class RealEstateApplication
             try
             {
                 price = Double.parseDouble(JOptionPane.showInputDialog("Please enter the property price"));
+                data[x].setHousePrice(price);
                 valid = true;
             }catch(NumberFormatException e){
                 JOptionPane.showMessageDialog(null, "Price must be entered in a numaric format");
@@ -217,8 +223,7 @@ public class RealEstateApplication
                 valid = false;
             }
 
-        }while(!valid);
-        data[x].setHousePrice(price);
+        }while(!valid);       
     }
     /*
         editAgentName asks the agent for their name
@@ -226,11 +231,12 @@ public class RealEstateApplication
     public static void editAgentName(House[] data, int x)
     {
         String name = "";
-        Boolean valid = false;
+        boolean valid = false;
         do
         {
             try{
             name = JOptionPane.showInputDialog(null, "Please enter the agents name");
+            valid = true;
             }catch(IllegalArgumentException e){
                 JOptionPane.showMessageDialog(null, e.getMessage());
             }
@@ -266,7 +272,7 @@ public class RealEstateApplication
         int Xcoordinates = 0;
         int Ycoordinates = 0;
         boolean confirmation = false;
-        String grid = "";
+        String grid = printGrid(data);
         do
         {
             //Get the X coordinates
@@ -303,7 +309,13 @@ public class RealEstateApplication
             //TODO: Print the grid with a bracket inbewteen the chosen one.
             confirmation = JOptionPane.showConfirmDialog(null, "You have chosen coordinates X: " + Xcoordinates + " & Y: " + Ycoordinates + "\nIs that correct?") == JOptionPane.YES_OPTION;
         }while(confirmation == false);
-        printHousingInformation(data);
+        House home = null;
+        for(int i=0; i<data.length; i++){
+         if(data[i].getXCoordinate() == Xcoordinates && data[i].getYCoordinate() == Ycoordinates){
+            home = data[i];
+         }
+        }
+        printHousingInformation(home);
     }
     /*
     
@@ -311,56 +323,37 @@ public class RealEstateApplication
     public static String printGrid(House[] data)
     {
         String grid = "";
-        for (int j = 1; j < 6; j++)
-        {
-            for (int k = 1; k < 6; k++)
-            {
-                if (data[k].getYCoordinate() == j && data[k].getXCoordinate() == k)
-                {
-                    if (data[k].getStatus() == 0)
-                    {
-                        grid += "X|     ";
-                    }
-                    else if (data[k].getStatus() == 1)
-                    {
-                        grid += "O|     ";
-                    }
-                    else
-                    {
-                        grid += "*|     ";
-                    }
-                    
-                }
-            }
-            grid += "\n";
-
+        for (int j = 0; j < data.length; j++)
+        {            
+         switch(j){
+            case(5):
+            case(10):
+            case(15):
+            case(20): grid+= "\n";            
+         }
+         grid+=data[j].ToSymbol();        
         }
         return grid;
     }
     /*
     
     */
-    public static void printHousingInformation(House[] data)
+    public static void printHousingInformation(House home)
     {
-        //where home is equal to the object refrence we are trying to print.
-        //String output = home.toString();
-        //JOptionPane.showMessageDialog(null, output);
-        try
-        {
-            //This prompts the user to enter a txt file name of the users choosing. The txt file will be placed in the .java file's directory
-            PrintWriter out = new PrintWriter(new FileOutputStream(new File(JOptionPane.showInputDialog("Please enter file name."))));
-            Type[] type = new Type[25];
-            for (int i = 0; i < data.length;i++)
-            {
-                type[i] = new Type();
-                
-                out.println(data[i].getXCoordinate() + ", " + data[i].getYCoordinate() + ", " + data[i].getAgentName() + ", " + data[i].getPrice() + ", " + data[i].getStatus() + ", " +  type[i].getTypeNo());
-            }
-            out.close();
-        }catch(FileNotFoundException e)
-        {
-            JOptionPane.showMessageDialog(null, "could not find file","Phase V", JOptionPane.ERROR_MESSAGE);
-        }
-    
+      JOptionPane.showMessageDialog(null, home.toString());    
+    }
+    public static void saveToFile(House[] data){
+    //instantiates a new object of the PrintWriter class
+      PrintWriter op = null;
+      try{
+         //This prompts the user to enter a txt file name of the users choosing. The txt file will be placed in the .java file's directory
+            op = new PrintWriter(new FileOutputStream(new File(JOptionPane.showInputDialog("Please enter file name."))));
+      }catch(FileNotFoundException e){
+         JOptionPane.showMessageDialog(null, "The file was unable to be created/updated, please check the permissions on the current directory and try again","Real Estate Application", JOptionPane.ERROR_MESSAGE);
+      }
+      for(int i=0; i<data.length; i++){
+         op.println(data[i].getXCoordinate() + " , " + data[i].getYCoordinate() + " , " + data[i].getAgentName() + " , " + data[i].getPrice() + " , " + data[i].getStatus() + " , " + data[i].getType());
+      }
+      op.close();
     }
 }
