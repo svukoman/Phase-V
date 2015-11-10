@@ -1,6 +1,7 @@
 public class Type
 {
     private String type;
+    private int typeNo;
     private final String[] TYPE_LIST = {"Single Family Home", "Town-House", "Condo", "Apartment"};
 
     public Type(){}
@@ -11,12 +12,18 @@ public class Type
     public Type(int type)
     {
         this.type = TYPE_LIST[type-1];  
+        this.typeNo = type;
     }
     /*Method purpose:
      Method parameters:
      Return:
     */
-    public String getType(){return this.type;}
+    public String getTypeString(){return this.type;}
+    /*Method purpose:
+     Method parameters:
+     Return:
+    */
+    public int getTypeNo(){return this.typeNo;}
 
     /*Method purpose:
      Method parameters:

@@ -6,6 +6,11 @@ public class House
     private int houseStatus;
     private String agentName;
     private Type type = new Type();
+    
+    public House()
+    {
+        
+    }
     /*Method purpose:
       Method parameters:
       Return:
@@ -87,7 +92,37 @@ public class House
             this.houseStatus = houseStatus;
         }	
     }
-
+    
+    /*
+        
+    */
+    public void setXCoordinates(int x)
+    {
+        //1 if the house is for sail, 2 if the house is sold, 3 if the house is sold by another company
+        if(x > 5 || x< 1)
+        {
+            throw new IllegalArgumentException("");
+        }
+        else
+        {
+            this.xCoordinate = x;
+        }	
+    }
+    /*
+        
+    */
+    public void setYCoordinates(int y)
+    {
+        //1 if the house is for sail, 2 if the house is sold, 3 if the house is sold by another company
+        if(y > 5 || y< 1)
+        {
+            throw new IllegalArgumentException("");
+        }
+        else
+        {
+            this.yCoordinate = y;
+        }	
+    }
     /*Method purpose:
       Method parameters:
       Return:
