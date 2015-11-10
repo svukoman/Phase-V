@@ -15,10 +15,10 @@ public class RealEstateApplication
         House[] data = new House[MAX_HOUSES];
         try{
         chooseFile(data);
-        }catch(FileNotFoundExceptio e){
-            JOptionPane.showMessageDialog(null, "Sorry, the file at " + path + " was not found");
-        }catch(IOException){
-            JOptionPane.showMessageDialog(null, "Sorry, there was a problem reading the file at: " + path);
+        }catch(FileNotFoundException e){
+            JOptionPane.showMessageDialog(null, "Sorry, the file was not found");
+        }catch(IOException e){
+            JOptionPane.showMessageDialog(null, "Sorry, there was a problem reading the file");
         }
         int option = 0;
         do
