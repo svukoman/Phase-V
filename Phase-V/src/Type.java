@@ -38,6 +38,7 @@ public class Type
        else 
        {
             this.type = TYPE_LIST[type];
+            this.typeNo = type;
        }
     }
 

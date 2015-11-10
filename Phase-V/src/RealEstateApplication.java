@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -15,39 +16,33 @@ public class RealEstateApplication
 
         int valid = 1;
         //valid = chooseFile(data);
-        while(valid == 1)
+        
+        String path = chooseFile(data);
+
+        int option = 0;
+        do
         {
-            valid = chooseFile(data);
-            if (valid == 0)
+            option = showMenu();
+            switch (option)
             {
-                int option = 0;
-                do
-                {
-                    option = showMenu();
-                    switch (option)
-                    {
-                         case 0:
-                            editHouseInfo(data);
-                            break;
-                         case 1: 
-                            viewHousingInfo(data);
-                            break;
-                         case 2:
-                            JOptionPane.showMessageDialog(null, "Goodbye");
-                            break;
-                    }
-                }while(option != 2);
+                 case 0:
+                    editHouseInfo(data, path);
+                    break;
+                 case 1: 
+                    viewHousingInfo(data);
+                    break;
+                 case 2:
+                    JOptionPane.showMessageDialog(null, "Goodbye");
+                    break;
             }
-            else
-            {
-                JOptionPane.showMessageDialog(null, "Sorry, you have not chosen a file. Please run the program again");
-            }
-        }
+        }while(option != 2);
+        
+        
     }
     /*
     Method choose file prompts the user to choose a text file to read information from.
     */
-    public static int chooseFile(House[] data) throws FileNotFoundException
+    public static String chooseFile(House[] data) throws FileNotFoundException
     {
         int xCord = -1;
         int yCord = -1;
@@ -61,38 +56,40 @@ public class RealEstateApplication
         //JFileChooser opens a dialog box to choose a specefic file regardelss if its in the same location as the .java file.
         JFileChooser aFile = new JFileChooser();
         int result = aFile.showOpenDialog(null);
+        String path = aFile.getSelectedFile().getPath();
         if (result == JFileChooser.APPROVE_OPTION)
         {
             try{
-                in = new Scanner(new FileInputStream(new File(aFile.getSelectedFile().getPath())));
+                in = new Scanner(new FileInputStream(new File(path)));
                 while(in.hasNextLine()){
-                   xCord = Integer.parseInt(in.next());
-                   comma = in.next();
+                    xCord = Integer.parseInt(in.next());
+                    comma = in.next();
 
-                   yCord = Integer.parseInt(in.next());
-                   comma = in.next();
+                    yCord = Integer.parseInt(in.next());
+                    comma = in.next();
 
-                   name = in.next();
-                   comma = in.next();
+                    name = in.next();
+                    comma = in.next();
 
-                   money = Double.parseDouble(in.next());
-                   comma = in.next();
+                    money = Double.parseDouble(in.next());
+                    comma = in.next();
 
-                   status = Integer.parseInt(in.next());
-                   comma = in.next();
+                    status = Integer.parseInt(in.next());
+                    comma = in.next();
 
-                   type = Integer.parseInt(in.next());            
+                    type = Integer.parseInt(in.next());            
 
-                   data[i] = new House(xCord, yCord, name, money, status, type);
-                   i++;  
+                    data[i] = new House(xCord, yCord, name, money, status, type);
+                    i++;  
                 }
                 in.close();         
             }catch(IllegalArgumentException f){
              JOptionPane.showMessageDialog(null, f.getMessage());
             }   
-            return 0;
+            catch(NoSuchElementException e){}
+            
         }
-        else return 1;
+        return path;
     }
     public static int showMenu ()
     {
@@ -101,7 +98,7 @@ public class RealEstateApplication
        
        return choice;
     }
-    public static void editHouseInfo(House[] data)
+    public static void editHouseInfo(House[] data, String path)
     {
         int Xcoordinates = 0;
         int Ycoordinates = 0;
@@ -163,23 +160,22 @@ public class RealEstateApplication
             {
                  case 0:
                     editPropertyType(data, x);
-                    saveToFile(data);
+                    saveToFile(data, path);
                     break;
                  case 1: 
                     editPrice(data, x);
-                    saveToFile(data);
+                    saveToFile(data, path);
                     break;
                  case 2:
                     editAgentName(data, x);
-                    saveToFile(data);
+                    saveToFile(data, path);
                     break;
                  case 3: 
                     editStatus(data, x);
-                    saveToFile(data);
+                    saveToFile(data, path);
                     break;
                  case 4:
                     JOptionPane.showMessageDialog(null, "Returning to Main menu");
-                    saveToFile(data);
                     break;
             }
         }while(option != 4);
@@ -353,18 +349,19 @@ public class RealEstateApplication
     {
       JOptionPane.showMessageDialog(null, home.toString());    
     }
-    public static void saveToFile(House[] data){
-    //instantiates a new object of the PrintWriter class
-      PrintWriter op = null;
-      try{
-         //This prompts the user to enter a txt file name of the users choosing. The txt file will be placed in the .java file's directory
-            op = new PrintWriter(new FileOutputStream(new File(JOptionPane.showInputDialog("Please enter file name."))));
-      }catch(FileNotFoundException e){
-         JOptionPane.showMessageDialog(null, "The file was unable to be created/updated, please check the permissions on the current directory and try again","Real Estate Application", JOptionPane.ERROR_MESSAGE);
-      }
-      for(int i=0; i<data.length; i++){
-         op.println(data[i].getXCoordinate() + " , " + data[i].getYCoordinate() + " , " + data[i].getAgentName() + " , " + data[i].getPrice() + " , " + data[i].getStatus() + " , " + data[i].getType());
-      }
-      op.close();
+    public static void saveToFile(House[] data, String path){
+        //instantiates a new object of the PrintWriter class
+        PrintWriter op = null;
+        try{
+           //This prompts the user to enter a txt file name of the users choosing. The txt file will be placed in the .java file's directory
+              op = new PrintWriter(new FileOutputStream(new File(path)));
+        }catch(FileNotFoundException e){
+           JOptionPane.showMessageDialog(null, "The file was unable to be created/updated, please check the permissions on the current directory and try again","Real Estate Application", JOptionPane.ERROR_MESSAGE);
+        }
+        for(int i=0; i<data.length; i++){
+           op.println(data[i].getXCoordinate() + " , " + data[i].getYCoordinate() + " , " + data[i].getAgentName() + " , " + String.format("%.0f", data[i].getPrice()) + " , " + data[i].getStatus() + " , " + data[i].getType());
+        }
+        op.close();
+        JOptionPane.showMessageDialog(null, "Information has successfully been saved to file.");
     }
 }
