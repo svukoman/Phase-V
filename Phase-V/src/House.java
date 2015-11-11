@@ -68,14 +68,13 @@ public class House
     */
     public void setAgentName(String agentName)
     {
-        if(agentName.equals(""))
+        if(agentName.isEmpty())
         {
             throw new IllegalArgumentException("The name entered is blank, please try again.");
         }
         else 
         {
             this.agentName = agentName;
-            
         }
     }
 
@@ -85,10 +84,10 @@ public class House
     */
     public void setHouseStatus(int houseStatus)
     {
-        //1 if the house is for sail, 2 if the house is sold, 3 if the house is sold by another company
-        if(houseStatus > 3 || houseStatus < 1)
+        //0 if the house is for sale, 1 if the house is sold, 2 if the house is sold by another company
+        if(houseStatus > 2 || houseStatus < 0)
         {
-            throw new IllegalArgumentException("");
+            throw new IllegalArgumentException("House status out of range. No changes were made.");
         }
         else
         {

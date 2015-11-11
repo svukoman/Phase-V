@@ -192,7 +192,14 @@ public class RealEstateApplication
     public static void editPropertyType(House[] data, int x)
     {
         Object[] property = {"Single family home", "Townhouse", "Condo", "Apartment"};
-        int propertyType = JOptionPane.showOptionDialog(null, "Which type of property is this home?", "Property edit", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, property, property[0]);
+        int propertyType = 0;
+        try
+        {
+            propertyType = JOptionPane.showOptionDialog(null, "Which type of property is this home?", "Property edit", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, property, property[0]);
+        }catch(IllegalArgumentException e)
+        {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
         data[x].setType(propertyType);
     }
     /*
@@ -235,14 +242,16 @@ public class RealEstateApplication
         boolean valid = false;
         do
         {
-            try{
-            name = JOptionPane.showInputDialog(null, "Please enter the agents name");
-            valid = true;
-            }catch(IllegalArgumentException e){
-                JOptionPane.showMessageDialog(null, e.getMessage());
+            try
+            {
+                name = JOptionPane.showInputDialog(null, "Please enter the agents name");
+                data[x].setAgentName(name);
+                valid = true;
+            }catch(IllegalArgumentException f){
+                JOptionPane.showMessageDialog(null, f.getMessage());
+                valid = false;
             }
         }while(!valid);
-        data[x].setAgentName(name);
     }
     /*
       Method purpose: Prompt the user for the status of the house.
@@ -253,7 +262,14 @@ public class RealEstateApplication
     {
        //present the user with a buttom prompt. Then simply pass the choice into the house object.
        Object[] status = {"For sale", "Sold", "N/A"};
-       int propertyStatus = JOptionPane.showOptionDialog(null, "Which type of property is this home??", "Property edit", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, status, status[0]);
+       int propertyStatus = 0;
+       try
+        {
+            propertyStatus = JOptionPane.showOptionDialog(null, "What is the status of this home??", "Property edit", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, status, status[0]);
+        }catch(IllegalArgumentException e)
+        {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
        data[x].setHouseStatus(propertyStatus);
     }
     /*
@@ -303,7 +319,7 @@ public class RealEstateApplication
                 {
                     xCoordinate = Integer.parseInt(JOptionPane.showInputDialog("X denotes house on the market, O for Sold, "
                             + "and * for not handled by this reaslestate company.\n"
-                            +grid + "\n\nPlease enter the X coordinate"));
+                            +grid + "\n\nPlease enter the X coordinate. Must be between 1 & 5"));
                 }catch(NumberFormatException e){}
                 if (xCoordinate < 0 || xCoordinate > 5)
                 {
@@ -330,7 +346,7 @@ public class RealEstateApplication
             {
             yCoordinate = Integer.parseInt(JOptionPane.showInputDialog("X denotes house on the market, O for Sold, "
                             + "and * for not handled by this reaslestate company.\n"
-                            +grid + "\n\nPlease enter the X coordinate"));
+                            +grid + "\n\nPlease enter the X coordinate. Must be between 1 & 5"));
             }catch(NumberFormatException e){}
             if (yCoordinate < 0 || yCoordinate > 5)
             {
@@ -378,6 +394,6 @@ public class RealEstateApplication
            op.println(data[i].getXCoordinate() + " , " + data[i].getYCoordinate() + " , " + data[i].getAgentName() + " , " + String.format("%.0f", data[i].getPrice()) + " , " + data[i].getStatus() + " , " + data[i].getType());
         }
         op.close();
-        JOptionPane.showMessageDialog(null, "Information has successfully been saved to file.");
+        JOptionPane.showMessageDialog(null, "Information has successfully been saved to file to: \n" + path);
     }
 }
