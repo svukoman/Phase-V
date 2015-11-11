@@ -161,10 +161,10 @@ public class House
     public String toString()
     {
         String msg = "";
-        if(houseStatus == 2){
+        if(houseStatus == 1){
                 msg = "Real Estate Agent: " + agentName + "\nThis house is already sold";
         }	
-        else if(houseStatus == 3){
+        else if(houseStatus == 2){
                 msg = "This house is not being sold by this real estate company";
         }
         else{
