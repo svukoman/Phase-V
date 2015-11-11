@@ -1,3 +1,10 @@
+/*
+    Phase V by:
+                Nasser Al-Zughaibi; Gno: 00765920; nalzugha@masonlive.gmu.edu
+                Michael Poulos; G no: 00905202; mpoulos@masonlive.gmu.edu
+                Sava Vukomanovic; G no: 00821360; svukoman@masonliv@gmu.edu
+    
+*/
 public class House
 {
     private int xCoordinate;
@@ -11,9 +18,9 @@ public class House
     {
         
     }
-    /*Method purpose:
-      Method parameters:
-      Return:
+    /*Method purpose: Special constructor to save all information retrieved from the file.
+      Method parameters: xCoordinate, yCoordinate, agentName, housePrice, houseStatus, type
+      Return: None.
     */
     public House(int xCoordinate, int yCoordinate,String agentName, double housePrice, int houseStatus, int type)
     {
@@ -39,11 +46,10 @@ public class House
         this.type.setType(type);
     }
 
-    /*Method purpose:
-      Method parameters:
-      Return:
+    /*Method purpose: Sets the house price on the house.
+      Method parameters: housePrice
+      Return: None.
     */
-
     public void setHousePrice(double housePrice)
     {
         if (housePrice <= 0)
@@ -56,11 +62,10 @@ public class House
         }
     }
 
-    /*Method purpose:
-      Method parameters:
-      Return:
+    /*Method purpose: Sets the agent name
+      Method parameters: agentName
+      Return:None.
     */
-
     public void setAgentName(String agentName)
     {
         if(agentName.equals(""))
@@ -74,12 +79,10 @@ public class House
         }
     }
 
-    /*Method purpose:
-      Method parameters:
-      Return:
+    /*Method purpose: Sets the house status, only 1-3
+      Method parameters: houseStatus
+      Return:None
     */
-
-
     public void setHouseStatus(int houseStatus)
     {
         //1 if the house is for sail, 2 if the house is sold, 3 if the house is sold by another company
@@ -92,77 +95,54 @@ public class House
             this.houseStatus = houseStatus;
         }	
     }
-    
-    /*
-        
+    /*Method purpose: Sets the type of house, send it to the second ddc for storage.
+      Method parameters: aType
+      Return:None
     */
-    public void setXCoordinates(int x)
-    {
-        //1 if the house is for sail, 2 if the house is sold, 3 if the house is sold by another company
-        if(x > 5 || x< 1)
-        {
-            throw new IllegalArgumentException("");
-        }
-        else
-        {
-            this.xCoordinate = x;
-        }	
-    }
-    /*
-        
-    */
-    public void setYCoordinates(int y)
-    {
-        //1 if the house is for sail, 2 if the house is sold, 3 if the house is sold by another company
-        if(y > 5 || y< 1)
-        {
-            throw new IllegalArgumentException("");
-        }
-        else
-        {
-            this.yCoordinate = y;
-        }	
-    }
     public void setType(int atype) throws IllegalArgumentException{
       type.setType(atype);  
     }
-    /*Method purpose:
-      Method parameters:
-      Return:
+    /*Method purpose: returns the agent name when called.
+      Method parameters: None.
+      Return: agentName.
     */
     public String getAgentName(){return this.agentName;}
 
-    /*Method purpose:
-      Method parameters:
-      Return:
+    /*Method purpose: returns the X coodrinate when called.
+      Method parameters: None.
+      Return: xCoordinate.
     */
     public int getXCoordinate(){return this.xCoordinate;}
 
-    /*Method purpose:
-      Method parameters:
-      Return:
+    /*Method purpose: returns the Y coordinate when called.
+      Method parameters: None.
+      Return: yCoordinate.
     */
     public int getYCoordinate(){return this.yCoordinate;}
 
-    /*Method purpose:
-      Method parameters:
-      Return:
+    /*Method purpose: returns the house price when called.
+      Method parameters: None.
+      Return: housePrice.
     */
     public double getPrice(){return this.housePrice;}
 
-    /*Method purpose:
-      Method parameters:
-      Return:
+    /*Method purpose: returns the house status when called.
+      Method parameters: None.
+      Return: houseStatus.
     */
     public int getStatus(){return this.houseStatus;}
 
-    /*Method purpose:
-      Method parameters:
-      Return:
+    /*Method purpose: returns the house type when called from the second DDC.
+      Method parameters: None.
+      Return: type.getTypeNo().
     */
     public int getType(){
       return this.type.getTypeNo();
     }
+    /*Method purpose: to return a symbol to help print out the grid in the implementation
+      Method parameters: None.
+      Return: msg.
+    */
     public String ToSymbol()
     {
         String msg = "";
@@ -174,6 +154,11 @@ public class House
         }
         return msg;	
     }
+    /*Method purpose: to print out the information whenever needed. If house is sold just the name of the agent and house status.
+      If it's still for sale then all the information would be presented.
+      Method parameters: None.
+      Return: msg.
+    */
     public String toString()
     {
         String msg = "";
