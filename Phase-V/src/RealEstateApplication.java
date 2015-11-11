@@ -1,3 +1,10 @@
+/*
+    Phase V by:
+                Nasser Al-Zughaibi; Gno: 00765920; nalzugha@masonlive.gmu.edu
+                Michael Poulos; G no: 00905202; mpoulos@masonlive.gmu.edu
+                Sava Vukomanovic; G no: 00821360; svukoman@masonliv@gmu.edu
+    
+*/
 import java.io.*;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -7,18 +14,16 @@ import javax.swing.JOptionPane;
 
 public class RealEstateApplication 
 {
-    //Remember to remove IOException from main
     public static void main(String[] args) throws IOException
     {
-        
+        //Initialize the maximum amount of houses as well as the array of objects to store all information
         int MAX_HOUSES = 25;
         House[] data = new House[MAX_HOUSES];
-
-        int valid = 1;
-        //valid = chooseFile(data);
         
+        //Store the path of the file so edits re-write to the same file.
         String path = chooseFile(data);
-
+        
+        //Initialilze the menu.
         int option = 0;
         do
         {
@@ -39,11 +44,13 @@ public class RealEstateApplication
         
         
     }
-    /*
-    Method choose file prompts the user to choose a text file to read information from.
+    /*Method purpose: To find the file that is to be read into the program.
+      Method parameters: House[] data object
+      Return: String path, path of the file for re-writing purposes.
     */
     public static String chooseFile(House[] data) throws FileNotFoundException
     {
+        //Initialize all the variables
         int xCord = -1;
         int yCord = -1;
         String name = " ";
@@ -53,6 +60,7 @@ public class RealEstateApplication
         Scanner in = null;
         int i = 0;
         String comma;
+        
         //JFileChooser opens a dialog box to choose a specefic file regardelss if its in the same location as the .java file.
         JFileChooser aFile = new JFileChooser();
         int result = aFile.showOpenDialog(null);
@@ -60,8 +68,10 @@ public class RealEstateApplication
         if (result == JFileChooser.APPROVE_OPTION)
         {
             try{
+                //Receives the file from the given path from JFileChooser
                 in = new Scanner(new FileInputStream(new File(path)));
                 while(in.hasNextLine()){
+                    //There's a comma after each variable.
                     xCord = Integer.parseInt(in.next());
                     comma = in.next();
 
@@ -78,7 +88,8 @@ public class RealEstateApplication
                     comma = in.next();
 
                     type = Integer.parseInt(in.next());            
-
+                    
+                    //At the end we pass everything to the House class constructor
                     data[i] = new House(xCord, yCord, name, money, status, type);
                     i++;  
                 }
@@ -87,10 +98,14 @@ public class RealEstateApplication
              JOptionPane.showMessageDialog(null, f.getMessage());
             }   
             catch(NoSuchElementException e){}
-            
+
         }
         return path;
     }
+    /*Method purpose: To present the user with a simple menu.
+      Method parameters: None.
+      Return: int choice, which is the menu choice.
+    */
     public static int showMenu ()
     {
        Object[] options = {"Edit housing information", "View housing informaiton", "Exit"};
@@ -98,54 +113,31 @@ public class RealEstateApplication
        
        return choice;
     }
+    /*Method purpose: To receive coordinates and ask what to edit.
+      Method parameters: House[] data object, and String path.
+      Return: None.
+    */
     public static void editHouseInfo(House[] data, String path)
     {
-        int Xcoordinates = 0;
-        int Ycoordinates = 0;
+        int xCoordinate = 0;
+        int yCoordinate = 0;
         String grid = "";
         boolean confirmation = false;
         do
         {
-            //Get the X coordinates
-            do
-            {
-                //TODO: Add a way to show the coordinates during input
-                
-                
-                grid = printGrid(data);
-                try
-                {
-                    Xcoordinates = Integer.parseInt(JOptionPane.showInputDialog(grid + "\n\nPlease enter the X coordinate"));
-                }catch(NumberFormatException e){}
-                if (Xcoordinates < 0 || Xcoordinates > 5)
-                {
-                    JOptionPane.showMessageDialog(null, "ERROR!  Please enter an integer between 1 and 5");
-                }
-            }while (Xcoordinates < 0 || Xcoordinates > 5);
-            //Get the Y coordinates
-            do
-            {
-                //TODO: Add a way to show the coordinates during input
-                grid = printGrid(data);
-                try
-                {
-                Ycoordinates = Integer.parseInt(JOptionPane.showInputDialog( grid + "\n\nPlease enter the Y coordinates"));
-                }catch(NumberFormatException e){}
-                if (Ycoordinates < 0 || Ycoordinates > 5)
-                {
-                    JOptionPane.showMessageDialog(null, "ERROR!  Please enter an integer between 1 and 5");
-                }
-            }while (Ycoordinates < 0 || Ycoordinates > 5);
+            //Begin the coordinate methods.
+            xCoordinate = xCoordinates(data);
+            yCoordinate = yCoordinates(data);
 
-            //TODO: Print the grid with a bracket inbewteen the chosen one.
-            confirmation = JOptionPane.showConfirmDialog(null, "You have chosen coordinates X: " + Xcoordinates + " & Y: " + Ycoordinates + "\nIs that correct?") == JOptionPane.YES_OPTION;
+            //Asks the user if the choice is correct. If not then the user will be asked for the coordinates again.
+            confirmation = JOptionPane.showConfirmDialog(null, "You have chosen coordinates X: " + xCoordinate + " & Y: " + yCoordinate + "\nIs that correct?") == JOptionPane.YES_OPTION;
         }while(confirmation == false);
         
         //Search through the objects for the house
         int x = 0; boolean valid = false;
         do
         {
-            if (Xcoordinates == data[x].getXCoordinate() && Ycoordinates == data[x].getYCoordinate())
+            if (xCoordinate == data[x].getXCoordinate() && yCoordinate == data[x].getYCoordinate())
             {
                 valid = true;
             }
@@ -155,6 +147,7 @@ public class RealEstateApplication
         int option = 0;
         do
         {
+            //After receiving the choice for the menu it'll go to the choices method and also save any changes back to the file again.
             option = editMenu();
             switch (option)
             {
@@ -180,8 +173,9 @@ public class RealEstateApplication
             }
         }while(option != 4);
     }
-    /*
-        Buton menu for editing housing info
+    /*Method purpose: To present the user with a simple menu to edit housing information.
+      Method parameters: None.
+      Return: int choice, which is the menu choice.
     */
     public static int editMenu()
     {
@@ -191,24 +185,20 @@ public class RealEstateApplication
        return choice;
     }
     /*
-        editPropertyType changes the property type
+      Method purpose: Presents the user with a simple menu for property type
+      Method parameters: House data object, and int x for the object which coordinates it corresponds to.
+      Return: None.
     */
     public static void editPropertyType(House[] data, int x)
     {
-       Object[] property = {"Single family home", "Townhouse", "Condo", "Apartment"};
-       int propertyType = JOptionPane.showOptionDialog(null, "Which type of property is this home??", "Property edit", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, property, property[0]);
-       boolean valid = false;
-       do{
-       try{
-         data[x].setType(propertyType);
-         valid = true;
-       }catch(IllegalArgumentException e){
-         JOptionPane.showMessageDialog(null, e.getMessage());
-       }
-       }while(!valid);
+        Object[] property = {"Single family home", "Townhouse", "Condo", "Apartment"};
+        int propertyType = JOptionPane.showOptionDialog(null, "Which type of property is this home?", "Property edit", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, property, property[0]);
+        data[x].setType(propertyType);
     }
     /*
-        editPrice asks the agent for the property price.
+      Method purpose: Prompt the user for the price of the house.
+      Method parameters: House data object, and int x for the object which coordinates it corresponds to.
+      Return: None.
     */
     public static void editPrice(House[] data, int x)
     {
@@ -217,6 +207,7 @@ public class RealEstateApplication
         
         do
         {
+            //Prompts the user for the price, retries if an error occurs
             try
             {
                 price = Double.parseDouble(JOptionPane.showInputDialog("Please enter the property price"));
@@ -233,10 +224,13 @@ public class RealEstateApplication
         }while(!valid);       
     }
     /*
-        editAgentName asks the agent for their name
+      Method purpose: Prompt the user for the name of the agent for editing.
+      Method parameters: House data object, and int x for the object which coordinates it corresponds to.
+      Return: None.
     */
     public static void editAgentName(House[] data, int x)
     {
+        //Prompt for the name, only reprompts if an error occurs.
         String name = "";
         boolean valid = false;
         do
@@ -251,81 +245,105 @@ public class RealEstateApplication
         data[x].setAgentName(name);
     }
     /*
-        editStatus asks the agent for status, either property is sold or for sale or NA.
+      Method purpose: Prompt the user for the status of the house.
+      Method parameters: House data object, and int x for the object which coordinates it corresponds to.
+      Return: None.
     */
     public static void editStatus(House[] data, int x)
     {
+       //present the user with a buttom prompt. Then simply pass the choice into the house object.
        Object[] status = {"For sale", "Sold", "N/A"};
        int propertyStatus = JOptionPane.showOptionDialog(null, "Which type of property is this home??", "Property edit", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, status, status[0]);
-       switch (propertyStatus)
-            {
-                 case 0:
-                    data[x].setHouseStatus(propertyStatus);
-                    break;
-                 case 1: 
-                    data[x].setHouseStatus(propertyStatus);
-                    break;
-                case 2:
-                    data[x].setHouseStatus(propertyStatus);
-                default:
-                    JOptionPane.showMessageDialog(null, "Status was not updated");
-            }
+       data[x].setHouseStatus(propertyStatus);
     }
     /*
-        Begin the view information method and process
+      Method purpose: Gives the user all information of the house based on the inputted coordinates
+      Method parameters: House data array of objects.
+      Return: None.
     */
     public static void viewHousingInfo(House[] data)
     {
-        int Xcoordinates = 0;
-        int Ycoordinates = 0;
+        int xCoordinate = 0;
+        int yCoordinate = 0;
+        String grid = "";
         boolean confirmation = false;
-        String grid = printGrid(data);
         do
         {
-            //Get the X coordinates
-            do
-            {
-                //TODO: Add a way to show the coordinates during input
-                
-                
-                grid = printGrid(data);
-                try
-                {
-                    Xcoordinates = Integer.parseInt(JOptionPane.showInputDialog(grid + "\n\nPlease enter the X coordinate"));
-                }catch(NumberFormatException e){}
-                if (Xcoordinates < 0 || Xcoordinates > 5)
-                {
-                    JOptionPane.showMessageDialog(null, "ERROR!  Please enter an integer between 1 and 5");
-                }
-            }while (Xcoordinates < 0 || Xcoordinates > 5);
-            //Get the Y coordinates
-            do
-            {
-                //TODO: Add a way to show the coordinates during input
-                grid = printGrid(data);
-                try
-                {
-                Ycoordinates = Integer.parseInt(JOptionPane.showInputDialog( grid + "\n\nPlease enter the Y coordinates"));
-                }catch(NumberFormatException e){}
-                if (Ycoordinates < 0 || Ycoordinates > 5)
-                {
-                    JOptionPane.showMessageDialog(null, "ERROR!  Please enter an integer between 1 and 5");
-                }
-            }while (Ycoordinates < 0 || Ycoordinates > 5);
+            //Begin the coordinate methods.
+            xCoordinate = xCoordinates(data);
+            yCoordinate = yCoordinates(data);
 
-            //TODO: Print the grid with a bracket inbewteen the chosen one.
-            confirmation = JOptionPane.showConfirmDialog(null, "You have chosen coordinates X: " + Xcoordinates + " & Y: " + Ycoordinates + "\nIs that correct?") == JOptionPane.YES_OPTION;
+            //Asks the user if the choice is correct. If not then the user will be asked for the coordinates again.
+            confirmation = JOptionPane.showConfirmDialog(null, "You have chosen coordinates X: " + xCoordinate + " & Y: " + yCoordinate + "\nIs that correct?") == JOptionPane.YES_OPTION;
         }while(confirmation == false);
-        House home = null;
+        
+        //Search for the coordinates and print the toString of the matching house.
         for(int i=0; i<data.length; i++){
-         if(data[i].getXCoordinate() == Xcoordinates && data[i].getYCoordinate() == Ycoordinates){
-            home = data[i];
+         if(data[i].getXCoordinate() == xCoordinate && data[i].getYCoordinate() == yCoordinate){
+            JOptionPane.showMessageDialog(null, data[i].toString()); 
          }
         }
-        printHousingInformation(home);
+         
     }
     /*
+      Method purpose: To get the X coordinates from the user.
+      Method parameters: House data array of objects.
+      Return: The X coordinates.
+    */
+    public static int xCoordinates(House[] data)
+    {
+        int xCoordinate = 0;
+        String grid = "";
+        //Get the X coordinates
+            do
+            {
+                //printGrid gives back a 5x5 grid of the houses.
+                grid = printGrid(data);
+                try
+                {
+                    xCoordinate = Integer.parseInt(JOptionPane.showInputDialog("X denotes house on the market, O for Sold, "
+                            + "and * for not handled by this reaslestate company.\n"
+                            +grid + "\n\nPlease enter the X coordinate"));
+                }catch(NumberFormatException e){}
+                if (xCoordinate < 0 || xCoordinate > 5)
+                {
+                    JOptionPane.showMessageDialog(null, "ERROR!  Please enter an integer between 1 and 5");
+                }
+            }while (xCoordinate < 0 || xCoordinate > 5);
+        return xCoordinate;
+    }
+    /*
+      Method purpose: To get the Y coordinates from the user.
+      Method parameters: House data array of objects.
+      Return: The Y coordinates.
+    */
+    public static int yCoordinates(House[] data)
+    {
+        int yCoordinate = 0;
+        String grid = "";
+        //Get the Y coordinates
+        do
+        {
+            //printGrid gives back a 5x5 grid of the houses.
+            grid = printGrid(data);
+            try
+            {
+            yCoordinate = Integer.parseInt(JOptionPane.showInputDialog("X denotes house on the market, O for Sold, "
+                            + "and * for not handled by this reaslestate company.\n"
+                            +grid + "\n\nPlease enter the X coordinate"));
+            }catch(NumberFormatException e){}
+            if (yCoordinate < 0 || yCoordinate > 5)
+            {
+                JOptionPane.showMessageDialog(null, "ERROR!  Please enter an integer between 1 and 5");
+            }
+        }while (yCoordinate < 0 || yCoordinate > 5);
+        return yCoordinate;
+    }
     
+    /*
+      Method purpose: Prints the X, O, and * in a grid format for the houses.
+      Method parameters: House data array of objects.
+      Return: String grid, used to show as the user enters in the previous methods.
     */
     public static String printGrid(House[] data)
     {
@@ -343,12 +361,10 @@ public class RealEstateApplication
         return grid;
     }
     /*
-    
+      Method purpose: To print to the same file chosen in the beginning of the program.
+      Method parameters: House data array of objects, and String path which is the path to the original file.
+      Return: None.
     */
-    public static void printHousingInformation(House home)
-    {
-      JOptionPane.showMessageDialog(null, home.toString());    
-    }
     public static void saveToFile(House[] data, String path){
         //instantiates a new object of the PrintWriter class
         PrintWriter op = null;
