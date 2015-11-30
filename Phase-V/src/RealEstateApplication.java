@@ -21,7 +21,8 @@ public class RealEstateApplication
         House[] data = new House[MAX_HOUSES];
         
         //Store the path of the file so edits re-write to the same file.
-        String path = chooseFile(data);
+        final String path = "Sample_Data.txt";
+        chooseFile(data, path);
         
         //Initialilze the menu.
         int option = 0;
@@ -48,7 +49,7 @@ public class RealEstateApplication
       Method parameters: House[] data object
       Return: String path, path of the file for re-writing purposes.
     */
-    public static String chooseFile(House[] data) throws FileNotFoundException
+    public static String chooseFile(House[] data , String path) throws FileNotFoundException
     {
         //Initialize all the variables
         int xCord = -1;
@@ -60,47 +61,36 @@ public class RealEstateApplication
         Scanner in = null;
         int i = 0;
         String comma;
-        
-        //JFileChooser opens a dialog box to choose a specefic file regardelss if its in the same location as the .java file.
-        JFileChooser aFile = new JFileChooser();
-        int result = aFile.showOpenDialog(null);
-        String path = aFile.getSelectedFile().getPath();
-        if (result == JFileChooser.APPROVE_OPTION)
-        {
-            try{
-                //Receives the file from the given path from JFileChooser
-                in = new Scanner(new FileInputStream(new File(path)));
-                while(in.hasNextLine()){
-                    //There's a comma after each variable.
-                    xCord = Integer.parseInt(in.next());
-                    comma = in.next();
-
-                    yCord = Integer.parseInt(in.next());
-                    comma = in.next();
-
-                    name = in.next();
-                    comma = in.next();
-
-                    money = Double.parseDouble(in.next());
-                    comma = in.next();
-
-                    status = Integer.parseInt(in.next());
-                    comma = in.next();
-
-                    type = Integer.parseInt(in.next());            
-                    
-                    //At the end we pass everything to the House class constructor
-                    data[i] = new House(xCord, yCord, name, money, status, type);
-                    i++;  
-                }
-                in.close();         
-            }catch(IllegalArgumentException f){
-             JOptionPane.showMessageDialog(null, f.getMessage());
-            }   
-            catch(NoSuchElementException e){}
-
-        }
-        return path;
+        try{
+         in = new Scanner(new FileInputStream(path));
+         while(in.hasNextLine()){
+            xCord = Integer.parseInt(in.next());
+            comma = in.next();
+            
+            yCord = Integer.parseInt(in.next());
+            comma = in.next();
+            
+            name = in.next();
+            comma = in.next();
+            
+            money = Double.parseDouble(in.next());
+            comma = in.next();
+            
+            status = Integer.parseInt(in.next());
+            comma = in.next();
+            
+            type = Integer.parseInt(in.next());            
+            
+            data[i] = new House(xCord, yCord, name, money, status, type);
+            i++;  
+         }
+         in.close();         
+        }catch(IllegalArgumentException f){
+         JOptionPane.showMessageDialog(null, f.getMessage());
+        }catch(FileNotFoundException g){
+         JOptionPane.showMessageDialog(null, "Sorry, the file was not found");
+        }catch(NoSuchElementException h){}
+        return path;       
     }
     /*Method purpose: To present the user with a simple menu.
       Method parameters: None.
@@ -311,8 +301,7 @@ public class RealEstateApplication
         int xCoordinate = 0;
         String grid = "";
         //Get the X coordinates
-            do
-            {
+            do{
                 //printGrid gives back a 5x5 grid of the houses.
                 grid = printGrid(data);
                 try
@@ -320,12 +309,13 @@ public class RealEstateApplication
                     xCoordinate = Integer.parseInt(JOptionPane.showInputDialog("X denotes house on the market, O for Sold, "
                             + "and * for not handled by this reaslestate company.\n"
                             +grid + "\n\nPlease enter the X coordinate. Must be between 1 & 5"));
-                }catch(NumberFormatException e){}
-                if (xCoordinate < 0 || xCoordinate > 5)
-                {
-                    JOptionPane.showMessageDialog(null, "ERROR!  Please enter an integer between 1 and 5");
+                }catch(NumberFormatException e){
+                  JOptionPane.showMessageDialog(null, "You must enter data in a numaric format");
                 }
-            }while (xCoordinate < 0 || xCoordinate > 5);
+                if(xCoordinate <= 0 || xCoordinate > 5){
+                  JOptionPane.showMessageDialog(null, "Coordinates must be in range");
+                }
+            }while(xCoordinate <= 0 || xCoordinate > 5 );
         return xCoordinate;
     }
     /*
@@ -346,13 +336,14 @@ public class RealEstateApplication
             {
             yCoordinate = Integer.parseInt(JOptionPane.showInputDialog("X denotes house on the market, O for Sold, "
                             + "and * for not handled by this reaslestate company.\n"
-                            +grid + "\n\nPlease enter the X coordinate. Must be between 1 & 5"));
-            }catch(NumberFormatException e){}
-            if (yCoordinate < 0 || yCoordinate > 5)
-            {
-                JOptionPane.showMessageDialog(null, "ERROR!  Please enter an integer between 1 and 5");
+                            +grid + "\n\nPlease enter the Y coordinate. Must be between 1 & 5"));
+            }catch(NumberFormatException e){
+               JOptionPane.showMessageDialog(null, "You must enter coordinates in a numaric format");
             }
-        }while (yCoordinate < 0 || yCoordinate > 5);
+            if(yCoordinate <= 0 || yCoordinate > 5){
+               JOptionPane.showMessageDialog(null, "Coordinates must be in range");
+            }
+        }while (yCoordinate <= 0 || yCoordinate > 5);
         return yCoordinate;
     }
     
