@@ -6,8 +6,7 @@
     
 */
 import java.io.*;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.util.*;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -17,8 +16,9 @@ public class RealEstateApplication
     public static void main(String[] args) throws IOException
     {
         //Initialize the maximum amount of houses as well as the array of objects to store all information
-        int MAX_HOUSES = 25;
-        House[] data = new House[MAX_HOUSES];
+        //int MAX_HOUSES = 25;
+        //House[] data = new House[MAX_HOUSES];
+        Map<Integer, House> data = new HashMap<Integer, House>();
         
         //Store the path of the file so edits re-write to the same file.
         final String path = "Sample_Data.txt";
@@ -38,6 +38,7 @@ public class RealEstateApplication
                     viewHousingInfo(data);
                     break;
                  case 2:
+                    saveToFile(data, path);
                     JOptionPane.showMessageDialog(null, "Goodbye");
                     break;
             }
@@ -49,7 +50,7 @@ public class RealEstateApplication
       Method parameters: House[] data object
       Return: String path, path of the file for re-writing purposes.
     */
-    public static String chooseFile(House[] data , String path) throws FileNotFoundException
+    public static String chooseFile(Map<Integer,House> data , String path) throws FileNotFoundException
     {
         //Initialize all the variables
         int xCord = -1;
@@ -80,8 +81,8 @@ public class RealEstateApplication
             comma = in.next();
             
             type = Integer.parseInt(in.next());            
-            
-            data[i] = new House(xCord, yCord, name, money, status, type);
+            //make sure I cannot get higher than 24
+            data.put(i, new House(xCord, yCord, name, money, status, type));
             i++;  
          }
          in.close();         
@@ -107,7 +108,7 @@ public class RealEstateApplication
       Method parameters: House[] data object, and String path.
       Return: None.
     */
-    public static void editHouseInfo(House[] data, String path)
+    public static void editHouseInfo(Map<Integer, House> data, String path)
     {
         int xCoordinate = 0;
         int yCoordinate = 0;
@@ -127,7 +128,7 @@ public class RealEstateApplication
         int x = 0; boolean valid = false;
         do
         {
-            if (xCoordinate == data[x].getXCoordinate() && yCoordinate == data[x].getYCoordinate())
+            if (xCoordinate == data.get(x).getXCoordinate() && yCoordinate == data.get(x).getYCoordinate())
             {
                 valid = true;
             }
@@ -143,19 +144,18 @@ public class RealEstateApplication
             {
                  case 0:
                     editPropertyType(data, x);
-                    saveToFile(data, path);
                     break;
                  case 1: 
                     editPrice(data, x);
-                    saveToFile(data, path);
+                    
                     break;
                  case 2:
                     editAgentName(data, x);
-                    saveToFile(data, path);
+                    
                     break;
                  case 3: 
                     editStatus(data, x);
-                    saveToFile(data, path);
+                    
                     break;
                  case 4:
                     JOptionPane.showMessageDialog(null, "Returning to Main menu");
@@ -179,7 +179,7 @@ public class RealEstateApplication
       Method parameters: House data object, and int x for the object which coordinates it corresponds to.
       Return: None.
     */
-    public static void editPropertyType(House[] data, int x)
+    public static void editPropertyType(Map<Integer, House> data, int x)
     {
         Object[] property = {"Single family home", "Townhouse", "Condo", "Apartment"};
         int propertyType = 0;
@@ -190,14 +190,14 @@ public class RealEstateApplication
         {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
-        data[x].setType(propertyType);
+        data.get(x).setType(propertyType);
     }
     /*
       Method purpose: Prompt the user for the price of the house.
       Method parameters: House data object, and int x for the object which coordinates it corresponds to.
       Return: None.
     */
-    public static void editPrice(House[] data, int x)
+    public static void editPrice(Map<Integer, House> data, int x)
     {
         double price = 0;
         boolean valid = false;
@@ -208,7 +208,7 @@ public class RealEstateApplication
             try
             {
                 price = Double.parseDouble(JOptionPane.showInputDialog("Please enter the property price"));
-                data[x].setHousePrice(price);
+                data.get(x).setHousePrice(price);
                 valid = true;
             }catch(NumberFormatException e){
                 JOptionPane.showMessageDialog(null, "Price must be entered in a numaric format");
@@ -225,7 +225,7 @@ public class RealEstateApplication
       Method parameters: House data object, and int x for the object which coordinates it corresponds to.
       Return: None.
     */
-    public static void editAgentName(House[] data, int x)
+    public static void editAgentName(Map<Integer, House> data, int x)
     {
         //Prompt for the name, only reprompts if an error occurs.
         String name = "";
@@ -235,7 +235,7 @@ public class RealEstateApplication
             try
             {
                 name = JOptionPane.showInputDialog(null, "Please enter the agents name");
-                data[x].setAgentName(name);
+                data.get(x).setAgentName(name);
                 valid = true;
             }catch(IllegalArgumentException f){
                 JOptionPane.showMessageDialog(null, f.getMessage());
@@ -248,7 +248,7 @@ public class RealEstateApplication
       Method parameters: House data object, and int x for the object which coordinates it corresponds to.
       Return: None.
     */
-    public static void editStatus(House[] data, int x)
+    public static void editStatus(Map<Integer, House> data, int x)
     {
        //present the user with a buttom prompt. Then simply pass the choice into the house object.
        Object[] status = {"For sale", "Sold", "N/A"};
@@ -260,14 +260,14 @@ public class RealEstateApplication
         {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
-       data[x].setHouseStatus(propertyStatus);
+       data.get(x).setHouseStatus(propertyStatus);
     }
     /*
       Method purpose: Gives the user all information of the house based on the inputted coordinates
       Method parameters: House data array of objects.
       Return: None.
     */
-    public static void viewHousingInfo(House[] data)
+    public static void viewHousingInfo(Map<Integer, House> data)
     {
         int xCoordinate = 0;
         int yCoordinate = 0;
@@ -284,9 +284,9 @@ public class RealEstateApplication
         }while(confirmation == false);
         
         //Search for the coordinates and print the toString of the matching house.
-        for(int i=0; i<data.length; i++){
-         if(data[i].getXCoordinate() == xCoordinate && data[i].getYCoordinate() == yCoordinate){
-            JOptionPane.showMessageDialog(null, data[i].toString()); 
+        for(int i=0; i<data.size(); i++){
+         if(data.get(i).getXCoordinate() == xCoordinate && data.get(i).getYCoordinate() == yCoordinate){
+            JOptionPane.showMessageDialog(null, data.get(i).toString()); 
          }
         }
          
@@ -296,7 +296,7 @@ public class RealEstateApplication
       Method parameters: House data array of objects.
       Return: The X coordinates.
     */
-    public static int xCoordinates(House[] data)
+    public static int xCoordinates(Map<Integer, House> data)
     {
         int xCoordinate = 0;
         String grid = "";
@@ -323,7 +323,7 @@ public class RealEstateApplication
       Method parameters: House data array of objects.
       Return: The Y coordinates.
     */
-    public static int yCoordinates(House[] data)
+    public static int yCoordinates(Map<Integer, House> data)
     {
         int yCoordinate = 0;
         String grid = "";
@@ -352,10 +352,10 @@ public class RealEstateApplication
       Method parameters: House data array of objects.
       Return: String grid, used to show as the user enters in the previous methods.
     */
-    public static String printGrid(House[] data)
+    public static String printGrid(Map<Integer, House> data)
     {
         String grid = "";
-        for (int j = 0; j < data.length; j++)
+        for (int j = 0; j < data.size(); j++)
         {            
          switch(j){
             case(5):
@@ -363,7 +363,7 @@ public class RealEstateApplication
             case(15):
             case(20): grid+= "\n";            
          }
-         grid+=data[j].ToSymbol();        
+         grid+=data.get(j).ToSymbol();        
         }
         return grid;
     }
@@ -372,7 +372,7 @@ public class RealEstateApplication
       Method parameters: House data array of objects, and String path which is the path to the original file.
       Return: None.
     */
-    public static void saveToFile(House[] data, String path){
+    public static void saveToFile(Map<Integer, House> data, String path){
         //instantiates a new object of the PrintWriter class
         PrintWriter op = null;
         try{
@@ -381,8 +381,8 @@ public class RealEstateApplication
         }catch(FileNotFoundException e){
            JOptionPane.showMessageDialog(null, "The file was unable to be created/updated, please check the permissions on the current directory and try again","Real Estate Application", JOptionPane.ERROR_MESSAGE);
         }
-        for(int i=0; i<data.length; i++){
-           op.println(data[i].getXCoordinate() + " , " + data[i].getYCoordinate() + " , " + data[i].getAgentName() + " , " + String.format("%.0f", data[i].getPrice()) + " , " + data[i].getStatus() + " , " + data[i].getType());
+        for(int i=0; i<data.size(); i++){
+           op.println(data.get(i).getXCoordinate() + " , " + data.get(i).getYCoordinate() + " , " + data.get(i).getAgentName() + " , " + String.format("%.0f", data.get(i).getPrice()) + " , " + data.get(i).getStatus() + " , " + data.get(i).getType());
         }
         op.close();
         JOptionPane.showMessageDialog(null, "Information has successfully been saved to file to: \n" + path);
